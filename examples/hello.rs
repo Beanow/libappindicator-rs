@@ -21,11 +21,13 @@ fn main() {
   };
 
   if let Some(icon_path) = icon_path {
+    println!("set_icon_theme_path: {:?}", icon_path);
     indicator.set_icon_theme_path(icon_path.to_str().unwrap());
   }
 
   let icon_name = option_env!("TRAY_ICON_NAME").unwrap_or("rust-logo");
   let icon_desc = option_env!("TRAY_ICON_DESC").unwrap_or("icon");
+  println!("set_icon_full: {:?} {:?}", icon_name, icon_desc);
   indicator.set_icon_full(icon_name, icon_desc);
 
   let mut m = gtk::Menu::new();
