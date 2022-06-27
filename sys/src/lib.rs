@@ -10,11 +10,22 @@ use libloading::*;
 use once_cell::sync::Lazy;
 use std::os::raw::*;
 
-pub static LIB: Lazy<Library> = Lazy::new(||
-  unsafe {
-    Library::new(library_filename("ayatana-appindicator3")).unwrap_or_else(
-      |_e| Library::new(library_filename("appindicator3")).unwrap()
-    )
+pub static LIB: Lazy<Library> = Lazy::new(|| unsafe {
+  let libayatana = Library::new("libayatana-appindicator3.so.1");
+  if let Ok(lib) = libayatana {
+    return lib;
+  }
+
+  let libappindicator = Library::new("libappindicator3.so.1");
+  if let Ok(lib) = libappindicator {
+    return lib;
+  }
+
+  panic!(
+    "Failed to load libayatana-appindicator3.so.1 or libappindicator3.so.1\n{}\n{}",
+    libayatana.unwrap_err(),
+    libappindicator.unwrap_err()
+  );
 });
 
 pub type guint32 = c_uint;
